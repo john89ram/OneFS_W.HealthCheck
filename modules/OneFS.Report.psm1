@@ -161,7 +161,7 @@ function New-OneFSHtmlReport {
     if ($m.Success) { $version = $m.Value }
   }
 
-  $ts = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+  $ts = (Get-Date).ToString('MM-dd-yyyy HH:mm:ss')
   $fileName = Join-Path $OutFolder 'OneFS_Weekly_Health.html'
 
   $html = @"
@@ -169,7 +169,7 @@ function New-OneFSHtmlReport {
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<title>OneFS Weekly Health — $(ConvertTo-HtmlSafeText $ClusterName)</title>
+<title>OneFS Weekly Health Check — $(ConvertTo-HtmlSafeText $ClusterName)</title>
 <style>
   :root { --bg:#0b132b; --card:#1c2541; --line:#3a506b; --ok:#13a10e; --warn:#c19a00; --crit:#d13438; --unk:#838383; --text:#e6e6e6; --muted:#a7a7a7; --code:#0f1a33; }
   html,body { background: var(--bg); color: var(--text); font-family: system-ui, Segoe UI, Arial, sans-serif; }

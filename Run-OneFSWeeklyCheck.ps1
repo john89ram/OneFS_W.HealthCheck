@@ -122,12 +122,33 @@ $client   = if ($session0.PSObject.Properties['Session']) { $session0.Session } 
 # Collect raw sections
 $files = Invoke-OneFSWeeklyBlocks -Client $client -OutFolder $OutFolder -ZoneName $ZoneName -TimeoutSec $TimeoutSec
 
+# --- Derive a friendly display name for the report header ---
+# Default to whatever was targeted
+$ClusterDisplayName = $TargetHost
+
+try {
+  # Prefer parsing the raw 'isi status' output we just collected
+  $statusFile = Join-Path $OutFolder '01_Cluster_Node_Status.txt'
+  if (Test-Path -LiteralPath $statusFile) {
+    $raw = Get-Content -LiteralPath $statusFile -Raw -ErrorAction Stop
+    if (-not [string]::IsNullOrWhiteSpace($raw)) {
+      # Look for: "Cluster Name: Arete-AT4-PS01"
+      $m = [regex]::Match($raw, '^\s*Cluster Name:\s*(.+?)\s*$', 'Multiline')
+      if ($m.Success -and $m.Groups[1].Value) {
+        $ClusterDisplayName = $m.Groups[1].Value.Trim()
+      }
+    }
+  }
+} catch {
+  Write-Warning "Unable to parse cluster name from isi status: $($_.Exception.Message)"
+}
+
 # Classify health and write quick summary
 $classification = Classify-Sections -Files $files
 Add-SectionSummary -SummaryPath $summary -Classification $classification
 
 # Parse JSON and build HTML report
 $parsed = Parse-OneFSData -Client $client -OutFolder $OutFolder -ZoneName $ZoneName -TimeoutSec $TimeoutSec -Files $files
-$report = New-OneFSHtmlReport -OutFolder $OutFolder -ClusterName $TargetHost -Classification $classification -Parsed $parsed -Files $files
+$report = New-OneFSHtmlReport -OutFolder $OutFolder -ClusterName $ClusterDisplayName -Classification $classification -Parsed $parsed -Files $files
 
 Write-Host "Report created: $report"
