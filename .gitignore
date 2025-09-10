@@ -1,0 +1,4 @@
+﻿# Ignore real env/configs
+configs/*.json
+# Keep a safe template in the repo
+!configs/example.json

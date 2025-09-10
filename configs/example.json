@@ -1,0 +1,17 @@
+﻿{
+  "Clusters": [
+    {
+      "Name": "EXAMPLE-CLUSTER",
+      "MgmtIP": "1.2.3.4",
+      "User": "EXAMPLE",
+      "AuthMethod": "ssh-key-or-password"
+    }
+  ],
+  "Output": {
+    "Format": "html",
+    "Path": ".\\output"
+  },
+  "Logging": {
+    "Level": "Info"
+  }
+}
