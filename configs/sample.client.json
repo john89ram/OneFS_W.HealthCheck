@@ -1,0 +1,7 @@
+{
+  "host": "isilon.example.local",
+  "username": "admin",
+  "zone": "System",
+  "port": 22,
+  "keyPath": ""
+}
